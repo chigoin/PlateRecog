@@ -15,7 +15,7 @@ using OpenCvSharp.ML;
 
 
 
-namespace Template
+namespace PlateRecog
 {
     class TemplateRecogition
     {

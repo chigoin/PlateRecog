@@ -10,7 +10,7 @@ using OpenCvSharp;
 using OpenCvSharp.Extensions;
 
 
-namespace Template
+namespace PlateRecog
 {
     public enum PlateCategory
     {

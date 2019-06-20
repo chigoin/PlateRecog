@@ -40,9 +40,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CharRecognition.cs" />
-    <Compile Include="PlateProcess.cs" />
-    <Compile Include="PlateRecogbinition.cs" />
+    <Compile Include="PlateChar_SVM.cs" />
+    <Compile Include="CharSegment_V3.cs" />
+    <Compile Include="PlateCategory_SVM.cs" />
+    <Compile Include="PlateLocator_V3.cs" />
+    <Compile Include="PlateCharEnum.cs" />
+    <Compile Include="PlateRecognition_V3.cs" />
     <Compile Include="TemplateRecogition.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,7 @@ using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.ML;
 
-namespace Template
+namespace PlateRecog
 {   
     //定义字符识别类，使用SVM对字符进行识别
     public class PlateChar_SVM

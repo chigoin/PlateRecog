@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
-namespace Template
+namespace PlateRecog
 {
     public class PlateRecognition_V3
     {
