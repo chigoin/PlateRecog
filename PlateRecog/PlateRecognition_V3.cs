@@ -169,7 +169,7 @@ return result;
         switch (plateInfo.PlateCategory)
         {
             case PlateCategory.普通车牌:
-                if (lastFirstValue >= (int)PlateChar.京 && lastFirstValue <= (int)PlateChar.警)
+                if (lastFirstValue >= (int)PlateChar.京 && lastFirstValue <= (int)PlateChar.川)
                 {
                     plateInfo.CharInfos.RemoveAt(charCount - 1); //去掉最后⼀一位汉字
                 }
