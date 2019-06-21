@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime;
 
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
@@ -31,7 +32,7 @@ namespace PlateRecog
         {
             plateInfo.OriginalMat.SaveImage(fileName);
         }
-
+        //保存图片样本
         public static void SavePlateSample(Mat matPlate, PlateCategory plateCategory, string libPath)
         {
             DateTime now = DateTime.Now;
@@ -41,7 +42,7 @@ namespace PlateRecog
             string fileName = string.Format(@"{0}\plates\{1}\{2}.jpg", libPath, plateCategory, name);
             matPlate.SaveImage(fileName);
         }
-
+       // 保存图片样本
         public static void SavePlateSample(Mat matPlate, PlateCategory plateCategory, string libPath, string shortFileNameNoExt)
         {
             DateTime now = DateTime.Now;
@@ -75,16 +76,18 @@ namespace PlateRecog
             svm.KernelType = SVM.KernelTypes.Linear;
             svm.TermCriteria = new TermCriteria(CriteriaType.MaxIter, 10000, 1e-10);
             IsReady = true;
+           
+
             return svm.Train(samples, SampleTypes.RowSample, responses);
         }
 
-        //SVM保存
+        
         public static void Save(string fileName)
         {
             if (IsReady == false || svm == null) return;
             svm.Save(fileName);
         }
-        //导入SVM
+        //导入XML识别库文件
         public static void Load(string fileName)
         {
             try
@@ -97,7 +100,7 @@ namespace PlateRecog
                 throw new Exception("字符识别库加载异常，请检查存放路路径");
             }
         }
-        //判断是否是正确的培训目录
+        //判断是否是正确的训练目录
         public static bool IsCorrectTrainngDirectory(string path)
         {
             bool isCorrect = true;
@@ -114,7 +117,7 @@ namespace PlateRecog
             }
             return isCorrect;
         }
-        //测试集
+        //预测图片类型是否正确
         public static PlateCategory Test(Mat matTest)
         {
             try
@@ -140,13 +143,13 @@ namespace PlateRecog
                 throw ex;
             }
         }
-
+        //准备需要测试的图片文件
         public static PlateCategory Test(string fileName)
         {
             Mat matTest = Cv2.ImRead(fileName, ImreadModes.Grayscale);
             return Test(matTest);
         }
-
+        //基本没用
         public static bool PreparePlateTrainningDirectory(string path)
         {
             bool success = true;

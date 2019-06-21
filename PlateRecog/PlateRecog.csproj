@@ -59,14 +59,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CharSegment_V3.cs" />
+    <Compile Include="DataPreparingForSVM.cs" />
+    <Compile Include="MainAccess.cs" />
     <Compile Include="PlateCategory_SVM.cs" />
     <Compile Include="PlateCharEnum.cs" />
     <Compile Include="PlateChar_SVM.cs" />
     <Compile Include="PlateLocator_V3.cs" />
     <Compile Include="PlateRecognition_V3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

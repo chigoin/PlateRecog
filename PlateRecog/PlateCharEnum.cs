@@ -14,8 +14,8 @@ namespace PlateRecog
 {
     public enum PlateCategory
     {
-        普通车牌=0,
-        非车牌=1,
+        普通车牌=1,
+        非车牌=-1,
         普通车牌_两行=2,
         
     }
@@ -93,13 +93,13 @@ namespace PlateRecog
         湘 = 63,
         鄂 = 64,
         粤 = 65,
-        琼 = 66, 
+        琼 = 66,
         甘 = 67,
         陕 = 68,
         贵 = 69,
         云 = 70,
         川 = 71,
-        
+
     }
     public enum PlateLocateMethod
     {
@@ -244,7 +244,7 @@ namespace PlateRecog
                 stringBuilder.Append(charInfo.ToString());
             }
             string result = stringBuilder.ToString();
-            result = result.Replace("⾮非字符", "");
+            result = result.Replace("非字符", "");
             return result;
         }
     }

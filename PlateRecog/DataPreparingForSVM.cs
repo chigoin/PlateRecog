@@ -43,7 +43,7 @@ namespace PlateRecog
         }
 
         //得到图片的HOG特征
-        public static Mat GetSvmHOGFeatures(Mat img)
+        public static Mat GetPlateSvmHOGFeatures(Mat img)
         {
 
             float[] descriptor = PlateCategory_SVM.ComputeHogDescriptors(img);
@@ -51,6 +51,13 @@ namespace PlateRecog
             return feature;
 
         }
+        public static Mat GetCharSvmHOGFeatures(Mat img)
+        {
+            float[] descriptor = PlateChar_SVM.ComputeHogDescriptors(img);
+            Mat feature = Float2Mat(descriptor);
+            return feature;
+        }
+
         //对是否为车牌进行训练
        public static void TrainSVMDataForPlateRecog()
         {
@@ -89,7 +96,7 @@ namespace PlateRecog
                 //对图片进行二值化
                 Mat dst = new Mat();
                 Cv2.Threshold(img, dst, 0, 255, ThresholdTypes.Otsu);
-                Mat feature = GetSvmHOGFeatures(dst);
+                Mat feature = GetPlateSvmHOGFeatures(dst);
                 //获取HOG特征
                 feature = feature.Reshape(1, 1);
                 samples.PushBack(feature);
@@ -123,6 +130,7 @@ namespace PlateRecog
             {
                 string label = "_" + index.ToString();
                 string filePath = @"C:\Users\faiz\Desktop\AI\车牌-字符样本\车牌-字符样本\chars\" + label;
+                Console.WriteLine("{0}", filePath);
                 List<string> files = getSampleFiles(filePath);
                 ImgFiles.Add(files);
             }
@@ -152,7 +160,7 @@ namespace PlateRecog
                 //对图片进行二值化
                 Mat dst = new Mat();
                 Cv2.Threshold(img, dst, 0, 255, ThresholdTypes.Otsu);
-                Mat feature = GetSvmHOGFeatures(dst);
+                Mat feature = GetCharSvmHOGFeatures(dst);
                 //获取HOG特征
                 feature = feature.Reshape(1, 1);
                 samples.PushBack(feature);
@@ -163,10 +171,10 @@ namespace PlateRecog
             samples.ConvertTo(samples, MatType.CV_32F);
             // samples 将图片和样本标签合并成为一个训练集数据
             // 第二个参数的原因是，我们的samples 中的每个图片数据的排列都是一行
-            if (PlateCategory_SVM.Train(samples, responses))
+            if (PlateChar_SVM.Train(samples, responses))
             {
                 Console.WriteLine("Traing!!!");
-                PlateCategory_SVM.Save(@"E:\工作文件夹（workplace）\VSworkplace\PlateRecog\charRecog.xml");
+                PlateChar_SVM.Save(@"E:\工作文件夹（workplace）\VSworkplace\PlateRecog\charRecog.xml");
             }
             else
             {

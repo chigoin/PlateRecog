@@ -95,24 +95,24 @@ namespace PlateRecog
             result.PlateLocateMethod = plateInfo.PlateLocateMethod;
             result.PlateColor = plateColor;
             List<CharInfo> charInfos = new List<CharInfo>();
-            switch (splitMethod)
-            {
-                case CharSplitMethod.伽马:
-                    charInfos = CharSegment_V3.SplitePlateByGammaTransform(plateInfo.OriginalMat,
-                    plateColor);
-                    break;
-                case CharSplitMethod.指数:
-                    charInfos = CharSegment_V3.SplitePlateByIndexTransform(plateInfo.OriginalMat, plateColor);
-                    break;
-                case CharSplitMethod.对数:
-                    charInfos = CharSegment_V3.SplitePlateByLogTransform(plateInfo.OriginalMat, plateColor);
-                    break;
-                case CharSplitMethod.原图:
-                default:
-                    charInfos = CharSegment_V3.SplitePlateByOriginal(plateInfo.OriginalMat,
-                    plateInfo.OriginalMat, plateColor);
-                    break;
-            }
+            //switch (splitmethod)
+            //{
+            //    case charsplitmethod.伽马:
+            //        charinfos = charsegment_v3.spliteplatebygammatransform(plateinfo.originalmat,
+            //        platecolor);
+            //        break;
+            //    case charsplitmethod.指数:
+            //        charinfos = charsegment_v3.spliteplatebyindextransform(plateinfo.originalmat, platecolor);
+            //        break;
+            //    case charsplitmethod.对数:
+            //        charinfos = charsegment_v3.spliteplatebylogtransform(plateinfo.originalmat, platecolor);
+            //        break;
+            //    case charsplitmethod.原图:
+            //    default:
+            //        charinfos = charsegment_v3.spliteplatebyoriginal(plateinfo.originalmat,
+            //        plateinfo.originalmat, platecolor);
+            //        break;
+            //}
             for (int index = charInfos.Count - 1; index >= 0; index--)
             {
                 CharInfo charInfo = charInfos[index];

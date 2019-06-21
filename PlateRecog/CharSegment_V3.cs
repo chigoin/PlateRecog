@@ -96,7 +96,10 @@ namespace PlateRecog
             switch (plateColor)
             {
                 case PlateColor.蓝牌:
+                    break;
                 case PlateColor.黄牌:
+                    break;
+               
                 case PlateColor.未知:
                     threshold = gray.Threshold(1, 255, ThresholdTypes.Otsu | ThresholdTypes.Binary);
                     break;

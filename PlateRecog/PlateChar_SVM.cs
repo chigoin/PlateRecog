@@ -11,7 +11,7 @@ namespace PlateRecog
     public class PlateChar_SVM
     {
         public static bool IsReady = false;
-        public static OpenCvSharp.Size HOGWinSize = new OpenCvSharp.Size(32, 96);
+        public static OpenCvSharp.Size HOGWinSize = new OpenCvSharp.Size(32, 16);
         public static OpenCvSharp.Size HOGBlockSize = new OpenCvSharp.Size(16, 16);
         public static OpenCvSharp.Size HOGBlockStride = new OpenCvSharp.Size(8, 8);
         public static OpenCvSharp.Size HOGCellSize = new OpenCvSharp.Size(8, 8);
@@ -134,6 +134,7 @@ namespace PlateRecog
             charInfo.PlateChar = plateChar;
             SaveCharSample(charInfo, libPath);
         }
+
         //为字符串准备存储目录
         public static bool PrepareCharTrainningDirectory(string path)
         {
