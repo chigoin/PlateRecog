@@ -1,0 +1,2 @@
+E:\大三实训\test\PlateRecog\PlateRecog\PlateRecog\obj\Debug\PlateRecog.csprojAssemblyReference.cache
+E:\大三实训\test\PlateRecog\PlateRecog\PlateRecog\obj\Debug\PlateRecog.csproj.CoreCompileInputs.cache

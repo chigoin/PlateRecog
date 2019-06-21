@@ -25,7 +25,7 @@ namespace PlateRecog
         //指数变换
         public static Mat IndexTransform(Mat mat)
         {
-            int c = 1, r = 1;
+           
             if (mat.Empty())
                 return mat;
             Mat result = Mat.Zeros(mat.Size(), mat.Type());

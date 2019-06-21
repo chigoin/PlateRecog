@@ -27,7 +27,7 @@ namespace PlateRecog
 
         }
         //保存图片的方式
-        public static void SavePlateSample((PlateInfo plateInfo, string fileName)
+        public static void SavePlateSample(PlateInfo plateInfo, string fileName)
         {
             plateInfo.OriginalMat.SaveImage(fileName);
         }
@@ -101,7 +101,7 @@ namespace PlateRecog
         public static bool IsCorrectTrainngDirectory(string path)
         {
             bool isCorrect = true;
-            string[] plateCategoryNames = Enum.GetNames(typeof(plateCategory));
+            string[] plateCategoryNames = Enum.GetNames(typeof(PlateCategory));
             for (int index = 0; index < plateCategoryNames.Length; index++)
             {
                 string plateCategoryName = plateCategoryNames[index];
@@ -123,7 +123,7 @@ namespace PlateRecog
                 {
                     throw new Exception("训练数据为空，请重新训练?车牌类型识别或加载数据");
                 }
-                PlateCategory result = PlateCategory.? 非 ? 车牌;
+                PlateCategory result = PlateCategory.非车牌;
                 if (IsReady == false || svm == null) return result;
                 float[] descriptor = ComputeHogDescriptors(matTest);
                 Mat testDescriptor = Mat.Zeros(1, descriptor.Length, MatType.CV_32FC1);
