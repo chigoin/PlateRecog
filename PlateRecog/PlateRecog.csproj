@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CharSegment_V3.cs" />
+    <Compile Include="MainAccess.cs" />
     <Compile Include="PlateCategory_SVM.cs" />
     <Compile Include="PlateCharEnum.cs" />
     <Compile Include="PlateChar_SVM.cs" />
