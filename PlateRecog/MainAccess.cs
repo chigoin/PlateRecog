@@ -31,7 +31,7 @@ namespace PlateRecog
             //DataPreparingForSVM.TrainSVMDataForCharRecog();
             //Console.ReadKey();
             PlateChar_SVM.Load(@"");
-            PlateChar_SVM.Test();
+            PlateChar_SVM.Test(@"");
             
         }
         

@@ -18,6 +18,14 @@ namespace PlateRecog
         //得到安全的矩形
         public static Rect GetSafeRect(Rect rect, Mat mat)
         {
+            if (rect.Left < 0)
+                rect.Left = 0;
+            else if (rect.Top < 0)
+                rect.Top = 0;
+            else if (rect.Width > mat.Width)
+                rect.Width = mat.Width;
+            else if (rect.Height > mat.Height)
+                rect.Height = mat.Height;
 
             return rect;
         }
