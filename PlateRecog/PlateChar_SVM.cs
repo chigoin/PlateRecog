@@ -91,7 +91,16 @@ namespace PlateRecog
                 throw new Exception("训练数据为空，请重新训练字符或加载数据");
             }
             PlateChar result = PlateChar.非字符;
-            float[] descriptor = ComputeHogDescriptors(matTest);
+            //$$$$$$$$$$$$$$$$$$$$$$$$
+            Mat matTestGray = matTest;
+            if (matTest.Channels()==3)
+            {
+                 matTestGray = matTest.CvtColor(ColorConversionCodes.BGR2GRAY);
+            }
+          
+            //之后改为1-255
+            Mat matTestDst = matTestGray.Threshold(0, 225, ThresholdTypes.Otsu | ThresholdTypes.Binary);
+            float[] descriptor = ComputeHogDescriptors(matTestDst);
             Mat testDescriptor = Mat.Zeros(1, descriptor.Length, MatType.CV_32FC1);
             for (int index = 0; index < descriptor.Length; index++)
             {

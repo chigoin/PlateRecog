@@ -128,7 +128,11 @@ namespace PlateRecog
                 }
                 PlateCategory result = PlateCategory.非车牌;
                 if (IsReady == false || svm == null) return result;
-                float[] descriptor = ComputeHogDescriptors(matTest);
+                //￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥
+                Mat matTestGray = matTest.CvtColor(ColorConversionCodes.BGR2GRAY);
+                //之后记得改为0-255
+                Mat matTestDst = matTestGray.Threshold(0, 225, ThresholdTypes.Otsu | ThresholdTypes.Binary);
+                float[] descriptor = ComputeHogDescriptors(matTestDst);
                 Mat testDescriptor = Mat.Zeros(1, descriptor.Length, MatType.CV_32FC1);
                 for (int index = 0; index < descriptor.Length; index++)
                 {

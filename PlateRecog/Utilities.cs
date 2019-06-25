@@ -16,19 +16,55 @@ namespace PlateRecog
         }
 
         //得到安全的矩形
-        public static Rect GetSafeRect(Rect rect, Mat mat)
+        public static Rect GetSafeRect(Rect rect, Mat m)
         {
-            if (rect.Left < 0)
-                rect.Left = 0;
-            if (rect.Top < 0)
-                rect.Top = 0;
-            if (rect.Right> mat.Width)
-                rect.Width = mat.Width-rect.Left;
-            if (rect.Bottom > mat.Height)
-                rect.Height= mat.Height-rect.Top;
-
-            return rect;
+            Rect roi = rect;
+            Rect nullRect = new Rect();
+            nullRect.Width = 0;
+            nullRect.Height = 0;
+            nullRect.Left = 0;
+            nullRect.Top = 0;
+            if (!(0 <= roi.X && 0 <= roi.Width && roi.X + roi.Width <= m.Cols && 0 <= roi.Y && 0 <= roi.Height && roi.Y + roi.Height <= m.Rows))
+            {
+                return nullRect;
+            }
+            
+            if (roi.Left < 0)
+                roi.Left = 0;
+            if (roi.Top < 0)
+                roi.Top = 0;
+            if (roi.Right > m.Cols)
+                roi.Width = m.Cols - roi.Left;
+            if (roi.Bottom > m.Rows)
+                roi.Height = m.Rows - roi.Top;
+            return roi;
         }
+
+        public static List<Rect> GetSafeRects(Mat m, List<Rect> rects)
+        {
+
+            List<Rect> result = new List<Rect>();
+            for (int index = 0; index < rects.Count; index++)
+            {
+                Rect roi = rects[index];
+                if (!(0 <= roi.X && 0 <= roi.Width && roi.X + roi.Width <= m.Cols && 0 <= roi.Y && 0 <= roi.Height && roi.Y + roi.Height <= m.Rows))
+                {
+                    continue;
+                }
+                if (roi.Left < 0)
+                    roi.Left = 0;
+                if (roi.Top < 0)
+                    roi.Top = 0;
+                if (roi.Right > m.Cols)
+                    roi.Width = m.Cols - roi.Left;
+                if (roi.Bottom > m.Rows)
+                    roi.Height = m.Rows - roi.Top;
+
+                result.Add(roi);
+            }
+            return result;
+        }
+
         //拉普拉斯增强
         public static Mat LaplaceTransform(Mat source)
         {

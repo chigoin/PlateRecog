@@ -95,7 +95,8 @@ namespace PlateRecog
                 }
                 //对图片进行二值化
                 Mat dst = new Mat();
-                Cv2.Threshold(img, dst, 0, 255, ThresholdTypes.Otsu);
+                Cv2.Threshold(img, dst, 1, 255, ThresholdTypes.Otsu|ThresholdTypes.Binary);
+                //gray.Threshold(1, 255, ThresholdTypes.Otsu | ThresholdTypes.Binary)
                 Mat feature = GetPlateSvmHOGFeatures(dst);
                 //获取HOG特征
                 feature = feature.Reshape(1, 1);
@@ -121,30 +122,62 @@ namespace PlateRecog
 
         }
         //对字符进行训练
-       public static void TrainSVMDataForCharRecog()
+       public static void TrainSVMDataForCharRecog(string path)
         {
             Console.WriteLine("preparing for training data!!!!");
             List<TrainStruct> svmData = new List<TrainStruct>();
             List<List<string>> ImgFiles = new List<List<string>>();
-            for(int index=0;index<10;index++)
+            //for(int index=0;index<10;index++)
+            //{
+            //    string label = "_" + index.ToString();
+            //    string filePath = @"C:\Users\faiz\Desktop\AI\车牌-字符样本\车牌-字符样本\chars\" + label;
+            //    Console.WriteLine("{0}", filePath);
+            //    List<string> files = getSampleFiles(filePath);
+            //    ImgFiles.Add(files);
+            //}
+           for(int index=(int)PlateChar.A;index<=(int)PlateChar._9;index++)
             {
-                string label = "_" + index.ToString();
-                string filePath = @"C:\Users\faiz\Desktop\AI\车牌-字符样本\车牌-字符样本\chars\" + label;
-                Console.WriteLine("{0}", filePath);
-                List<string> files = getSampleFiles(filePath);
-                ImgFiles.Add(files);
+                if(index>=28&&index<=37)
+                {
+                    string labelForNumber = "_" + (index-28).ToString();
+                    string filePath = path + labelForNumber;//@"C:\Users\faiz\Desktop\AI\车牌-字符样本\车牌-字符样本\chars\"
+                    Console.WriteLine("{0}", filePath);
+                    List<string> files = getSampleFiles(filePath);
+                    ImgFiles.Add(files);
+                }
+                else
+                {
+                    PlateChar plateChar = (PlateChar)index;
+                    string labelForWord = plateChar.ToString();
+                    string filePath = path + labelForWord;//@"C:\Users\faiz\Desktop\AI\车牌-字符样本\车牌-字符样本\chars\"
+                    Console.WriteLine("{0}", filePath);
+                    List<string> files = getSampleFiles(filePath);
+                    ImgFiles.Add(files);
+                }
             }
-            for(int index1=0;index1<ImgFiles.Count;index1++)
+           //现在主要是要识别广东车牌
+            List<string> exFiles = getSampleFiles(path + PlateChar.粤.ToString());
+            ImgFiles.Add(exFiles);
+           
+            for (int index1=0;index1<ImgFiles.Count-1;index1++)
             {
                 for(int index2=0;index2<ImgFiles.ElementAt(index1).Count;index2++)
                 {
                     TrainStruct trainData;
                     trainData.file = ImgFiles.ElementAt(index1).ElementAt(index2);
-                    trainData.label = index1+28;
+                    trainData.label = index1+2;
                     svmData.Add(trainData);
                 }
             }
-            
+            //最后再添加东的数据
+            for (int index = 0; index < ImgFiles.ElementAt(ImgFiles.Count-1).Count; index++)
+            {
+                TrainStruct trainData;
+                trainData.file = ImgFiles.ElementAt(ImgFiles.Count - 1).ElementAt(index);
+                trainData.label = (int)PlateChar.粤;
+                svmData.Add(trainData);
+            }
+
             Mat samples = new Mat();
             Mat responses = new Mat();
             //读取数据并进行处理
@@ -159,7 +192,7 @@ namespace PlateRecog
                 }
                 //对图片进行二值化
                 Mat dst = new Mat();
-                Cv2.Threshold(img, dst, 0, 255, ThresholdTypes.Otsu);
+                Cv2.Threshold(img, dst, 1, 255, ThresholdTypes.Otsu|ThresholdTypes.Binary);
                 Mat feature = GetCharSvmHOGFeatures(dst);
                 //获取HOG特征
                 feature = feature.Reshape(1, 1);
@@ -173,8 +206,9 @@ namespace PlateRecog
             // 第二个参数的原因是，我们的samples 中的每个图片数据的排列都是一行
             if (PlateChar_SVM.Train(samples, responses))
             {
-                Console.WriteLine("Traing!!!");
+                Console.WriteLine("Trained success!!!");
                 PlateChar_SVM.Save(@"E:\工作文件夹（workplace）\VSworkplace\PlateRecog\charRecog.xml");
+                Console.WriteLine("\".xml\"has been written!!1");
             }
             else
             {

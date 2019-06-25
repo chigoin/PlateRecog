@@ -272,7 +272,12 @@ namespace PlateRecog
             {
                 CharInfo plateCharInfo = new CharInfo();
                 rects[index] = Utilities.GetSafeRect(rects[index], originalMat);
+                
                 Rect rectROI = rects[index];
+                if(rectROI.Width==0&&rectROI.Height==0)
+                {
+                    continue;
+                }
                 Mat matROI = originalMat.SubMat(rectROI);
                 plateCharInfo.OriginalMat = matROI;
                 plateCharInfo.OriginalRect = rectROI;
