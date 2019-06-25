@@ -14,7 +14,7 @@ namespace PlateRecog
         //清除铆钉
         public static Mat ClearMaoding(Mat threshold)
         {
-            List<float> jumps = new List<float>();
+            //List<float> jumps = new List<float>();
             Mat jump = new Mat(threshold.Rows, 1, MatType.CV_32F);
             for (int rowIndex = 0; rowIndex < threshold.Rows; rowIndex++)
             {
@@ -26,6 +26,7 @@ namespace PlateRecog
                 }
                 jump.Set<float>(rowIndex, 0, (float)jumpCount);
             }
+            //设置阈值，检测过程中黑白像素点变化的次数，并记录下每一排的变化次数，从而将铆钉去除
             int x = 7;
             Mat result = threshold.Clone();
             for (int rowIndex = 0; rowIndex < threshold.Rows; rowIndex++)
@@ -96,11 +97,14 @@ namespace PlateRecog
             switch (plateColor)
             {
                 case PlateColor.蓝牌:
+                    threshold = gray.Threshold(1, 255, ThresholdTypes.Otsu | ThresholdTypes.Binary);
                     break;
                 case PlateColor.黄牌:
+                    threshold = gray.Threshold(1, 255, ThresholdTypes.Otsu | ThresholdTypes.BinaryInv);
                     break;
                
                 case PlateColor.未知:
+                    //这里的二值化记得拿去用一下下
                     threshold = gray.Threshold(1, 255, ThresholdTypes.Otsu | ThresholdTypes.Binary);
                     break;
             }
@@ -108,7 +112,7 @@ namespace PlateRecog
             Mat matOfClearMaodingAndBorder = ClearMaoding(matOfClearBoder);
             return matOfClearMaodingAndBorder;
         }
-        //分割字符
+        //对分割好的字符进行识别，并得到字符数组
         public static List<CharInfo> SpliteCharsInPlateMat(Mat plateMat, List<Rect> rects)
         {
             if (PlateChar_SVM.IsReady == false)
@@ -124,6 +128,7 @@ namespace PlateRecog
                 Mat originalMat = plateMat.SubMat(rect);
                 charInfo.OriginalMat = originalMat;
                 charInfo.OriginalRect = rect;
+
                 charInfo.PlateChar = PlateChar_SVM.Test(originalMat);
                 result.Add(charInfo);
             }
@@ -249,6 +254,7 @@ namespace PlateRecog
             matOfClearMaodingAndBorder.FindContours(out contours, out hierarchyIndices,
             RetrievalModes.External, ContourApproximationModes.ApproxNone);
             List<Rect> rects = new List<Rect>();
+            //将轮廓使用RECT矩形框选出来
             for (int index = 0; index < contours.Length; index++)
             {
                 Rect rect = Cv2.BoundingRect(contours[index]);

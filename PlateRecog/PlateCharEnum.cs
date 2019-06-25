@@ -23,7 +23,7 @@ namespace PlateRecog
     {
         蓝牌 = 0,
         黄牌 = 1,
-        未知 = 6
+        未知 = 2,
     }
     public enum PlateChar
     {
@@ -218,6 +218,7 @@ namespace PlateRecog
                 this.PlateLocateMethod);
             }
         }
+        
         public PlateInfo() { }
         public PlateInfo(PlateCategory plateCategory,
         Rect originalRect, Mat originalMat,
