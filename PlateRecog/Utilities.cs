@@ -20,69 +20,132 @@ namespace PlateRecog
         {
             if (rect.Left < 0)
                 rect.Left = 0;
-            else if (rect.Top < 0)
+            if (rect.Top < 0)
                 rect.Top = 0;
-            else if (rect.Width > mat.Width)
-                rect.Width = mat.Width;
-            else if (rect.Height > mat.Height)
-                rect.Height = mat.Height;
+            if (rect.Right> mat.Width)
+                rect.Width = mat.Width-rect.Left;
+            if (rect.Bottom > mat.Height)
+                rect.Height= mat.Height-rect.Top;
 
             return rect;
         }
+        //拉普拉斯增强
+        public static Mat LaplaceTransform(Mat source)
+        {
+            Mat kernel = new Mat(3, 3, MatType.CV_32FC1);
+            kernel.Set<float>(0, 0, 0);
+            kernel.Set<float>(0, 1, -1);
+            kernel.Set<float>(0, 2, 0);
+            kernel.Set<float>(1, 0, 0);
+            kernel.Set<float>(1, 1, 5);
+            kernel.Set<float>(1, 2, 0);
+            kernel.Set<float>(2, 0, 0);
+            kernel.Set<float>(2, 1, -1);
+            kernel.Set<float>(2, 2, 0);
+
+            Mat result = source.Filter2D(MatType.CV_8UC3, kernel);
+
+            return result;
+        }
 
         //指数变换
-        public static Mat IndexTransform(Mat mat)
+        public static Mat IndexTransform(Mat source)
         {
+            Mat result = new Mat(source.Size(), source.Type());
+            int rows = source.Rows;
+            int cols = source.Cols;
 
-            if (mat.Empty())
-                return mat;
-            Mat result = Mat.Zeros(mat.Size(), mat.Type());
+            double k = 1 / 255f;
+            for (int rowIndex = 0; rowIndex < rows; rowIndex++)
+            {
+                for (int colIndex = 0; colIndex < cols; colIndex++)
+                {
+                    Vec3b color = source.At<Vec3b>(rowIndex, colIndex);
+                    byte B = color[0];
+                    byte G = color[1];
+                    byte R = color[2];
 
-
-            return mat;
+                    B = (byte)(k * B * B);
+                    G = (byte)(k * G * G);
+                    R = (byte)(k * R * R);
+                    color = new Vec3b(B, G, R);
+                    result.Set<Vec3b>(rowIndex, colIndex, color);
+                }
+            }
+            return result;
         }
 
         //对数变换
-        public static Mat LogTransform(Mat mat)
+        public static Mat LogTransform(Mat source)
         {
-            int c = 5;
+            Mat result = new Mat(source.Size(), source.Type());
+            int rows = source.Rows;
+            int cols = source.Cols;
 
-            if (mat.Empty())
-                return mat;
-            Mat result = Mat.Zeros(mat.Size(), mat.Type());
-            //图像+1取对数
-            Cv2.Add(mat, new Scalar(1.0), mat);
-            //灰度归一化
-            mat.ConvertTo(mat, MatType.CV_32F);
-            Cv2.Log(mat, result);
-            //图像增强
-            result = c * result;
-            //归一化到0~255，输入result，输出result_image
-            Cv2.Normalize(result, result, 0, 255, NormTypes.MinMax);
-            //转化成8bit图像显示
-            Cv2.ConvertScaleAbs(result, result);
+            double k = 255 / Math.Log10(256.0);
+            for (int rowIndex = 0; rowIndex < rows; rowIndex++)
+            {
+                for (int colIndex = 0; colIndex < cols; colIndex++)
+                {
+                    Vec3b color = source.At<Vec3b>(rowIndex, colIndex);
+                    byte B = color[0];
+                    byte G = color[1];
+                    byte R = color[2];
+
+                    B = (byte)(k * Math.Log10(B + 1));
+                    G = (byte)(k * Math.Log10(G + 1));
+                    R = (byte)(k * Math.Log10(R + 1));
+                    color = new Vec3b(B, G, R);
+                    result.Set<Vec3b>(rowIndex, colIndex, color);
+                }
+            }
 
             return result;
         }
+
 
         //伽马变换
-        public static Mat GammaTransform(Mat mat, float gammaFactor)
+        public static Mat GammaTransform(Mat source, float gammaFactor = 0.4f)
         {
-            if (mat.Empty())
-                return mat;
+            int[] lut = new int[256];
+            for (int index = 0; index < 256; index++)
+            {
+                float f = (index + 0.5f) / 255;
+                f = (float)Math.Pow(f, gammaFactor);
+                lut[index] = (int)(f * 255.0f - 0.5f);
+                if (lut[index] > 255) lut[index] = 255;
+            }
 
-            mat.ConvertTo(mat, MatType.CV_64F, 1.0 / 255.0);
-
-            Mat result = Mat.Zeros(mat.Size(), mat.Type());
-            Cv2.Pow(mat, gammaFactor, result);
-
-            //归一化到0~255，输入result，输出result_image
-            Cv2.Normalize(result, result, 0, 255, NormTypes.MinMax);
-            //转化成8bit图像显示
-            Cv2.ConvertScaleAbs(result, result);
+            Mat result = source.Clone();
+            if (source.Channels() == 1)
+            {
+                for (int rowIndex = 0; rowIndex < result.Rows; rowIndex++)
+                {
+                    for (int colIndex = 0; colIndex < result.Cols; colIndex++)
+                    {
+                        int temp = result.At<int>(rowIndex, colIndex);
+                        result.Set<int>(rowIndex, colIndex, lut[temp]);
+                    }
+                }
+            }
+            else
+            {
+                for (int rowIndex = 0; rowIndex < result.Rows; rowIndex++)
+                {
+                    for (int colIndex = 0; colIndex < result.Cols; colIndex++)
+                    {
+                        Vec3b temp = result.At<Vec3b>(rowIndex, colIndex);
+                        result.Set<Vec3b>(rowIndex, colIndex, new Vec3b(
+                         (byte)lut[temp[0]],
+                         (byte)lut[temp[1]],
+                         (byte)lut[temp[2]]));
+                    }
+                }
+            }
 
             return result;
         }
+
 
     }
 }

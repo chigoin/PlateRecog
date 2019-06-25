@@ -23,7 +23,11 @@ namespace PlateRecog
         }
         //通过HOG完成对图片特征的提取
         public static float[] ComputeHogDescriptors(Mat image)
-        {
+        {   
+            //if(image.Channels()==3)
+            //{
+            //    image.CvtColor(ColorConversionCodes.BGR2GRAY);
+            //}
             Mat matToHog = image.Resize(HOGWinSize);
             HOGDescriptor hog = new HOGDescriptor(HOGWinSize,
             HOGBlockSize,
@@ -79,6 +83,7 @@ namespace PlateRecog
         //
         public static PlateChar Test(Mat matTest)
         {
+            //Mat matTest = mat.CvtColor(ColorConversionCodes.BayerRG2BGR);
             //try
             //{
             if (IsReady == false || svm == null)

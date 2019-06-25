@@ -27,7 +27,7 @@ namespace PlateRecog
             (ratio > minRatio && ratio < maxRatio);
             return result;
         }
-        //使用sobel算子过滤车牌大小不符合的
+        
         public static List<PlateInfo> LocatePlatesForCameraAdjust(Mat matSource,
             out Mat matProcess,
             int blur_Size = 5,
@@ -59,7 +59,7 @@ namespace PlateRecog
                 }
                 return plateInfos;
             }
-        //先判断颜色法，查询不到再使用sobel算法（简易）
+        
         public static List<PlateInfo> LocatePlatesForAutoSample(Mat matSource,
                                                                 out Mat matProcess,
                                                                 int blur_Size = 5,
@@ -74,7 +74,7 @@ namespace PlateRecog
                                                                 float minRatio = 0.15f, float maxRatio = 0.70f)
         {
             List<PlateInfo> plateInfos = new List<PlateInfo>();
-            //优先使用颜色法定位可能是车牌的区域，如果没有发现车牌，再使用Sobel法
+           
             Mat gray = null;
             Mat blur = null;
             if (matSource.Empty() || matSource.Rows == 0 || matSource.Cols == 0)
@@ -201,7 +201,7 @@ namespace PlateRecog
             }
             return plateInfos;
         }
-        //使用颜色法先查询，查询不到再使用sobel算法
+       
         public static List<PlateInfo> LocatePlates( Mat matSource,
                                                     int blur_Size = 5,
                                                     int sobel_Scale = 1,
